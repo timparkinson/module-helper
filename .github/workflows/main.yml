@@ -1,4 +1,26 @@
 # Actions workflow
 
-name: CI
+name: Build module
+
+on: 
+  pull_request: # Trigger on PRs to deploy branch
+    branches:
+      - deploy
+    types: [ closed ]
+  
+  workflow_dispatch: # Allow manual trigger
+  
+  jobs:
+    build:
+      if: github.event.pull_request.merged == true # only run if we've merged
+      runs-on: ubuntu-latest
+      steps:
+        # Checkout the deploy branch
+        - uses: actions/checkout@deploy
+
+      - name: Build module
+        shell: pwsh
+        run: pwsh -command './tasks.ps1 Build -Verbose'
+
+
 

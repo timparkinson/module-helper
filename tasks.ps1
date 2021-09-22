@@ -1,3 +1,4 @@
+[CmdletBinding()]
 param(
     [Parameter()]
     [ValidateSet(
@@ -12,10 +13,12 @@ $build_path = Join-Path $PSScriptRoot -ChildPath 'build'
 
 switch ($Task) {
     'Build' {
+        Write-Verbose "Creating $build_path"
         New-Item -ItemType Directory -Path $build_path -ErrorAction SilentlyContinue |
             Out-Null
 
         # Eating our own dog food...
+        Write-Verbose "Loading functions"
         'public', 'private' |
             ForEach-Object {
                 $path = Join-Path -Path $PSScriptRoot -ChildPath $_
@@ -27,10 +30,11 @@ switch ($Task) {
                         }
             }
 
+        Write-Verbose "Creating module file"
         Join-PowershellDefinition -Path $PSScriptRoot |
             Out-File -FilePath (Join-Path -Path $build_path -ChildPath "$(Split-Path -Leaf -Path $PSScriptRoot).psm1")
 
-        # PSD
+        Write-Verbose "Creating module manifest"
         Copy-Item -Path (Join-Path -Path $PSScriptRoot -ChildPath "$(Split-Path -Leaf -Path $PSScriptRoot).psd1") -Destination $build_path
     }
 
