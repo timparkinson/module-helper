@@ -22,6 +22,10 @@ jobs:
         shell: pwsh
         run: pwsh -command './tasks.ps1 Build -Verbose'
           
-          
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v2.2.3
+        with:
+          name: module-artifact
+          path: ./build/      
           
           
