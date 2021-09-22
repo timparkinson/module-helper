@@ -18,9 +18,9 @@ on:
         # Checkout the deploy branch
         - uses: actions/checkout@deploy
 
-      - name: Build module
-        shell: pwsh
-        run: pwsh -command './tasks.ps1 Build -Verbose'
+        - name: Build module
+          shell: pwsh
+          run: pwsh -command './tasks.ps1 Build -Verbose'
 
 
 
