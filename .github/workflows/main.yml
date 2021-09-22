@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Checkout the deploy branch
-      - uses: actions/checkout@deploy
+      - uses: actions/checkout@v2
           
       - name: Build module
         shell: pwsh
