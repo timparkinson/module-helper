@@ -57,6 +57,9 @@ switch ($Task) {
         $source_name = 'GitHub'
         Write-Verbose "Registering repository $source_name at $source"
         Register-PSRepository -Name $source_name -SourceLocation $source -PublishLocation $source -Credential $credential
+    
+        Write-Verbose "Publishing $build_path to $source_name"
+        Publish-Module -Name $repository -Path $build_path -Credential $credential -Repository $source_name 
     }
 
 }
