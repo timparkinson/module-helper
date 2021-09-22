@@ -26,6 +26,22 @@ jobs:
         uses: actions/upload-artifact@v2.2.3
         with:
           name: module-artifact
-          path: ./build/      
+          path: ./build/  
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: 
+        uses: actions/download-artifact@v2
+        with: 
+          name: module-artifact  
+          path: build  
+      
+      - name: publish
+        shell: pwsh
+        run: pwsh -command './tasks.ps1 Publish -Verbose'
           
           
