@@ -59,7 +59,7 @@ switch ($Task) {
         Register-PSRepository -Name $source_name -SourceLocation $source -PublishLocation $source -Credential $credential
     
         Write-Verbose "Publishing $build_path to $source_name"
-        Publish-Module -Path $build_path -Credential $credential -Repository $source_name 
+        Publish-Module -Path $build_path -Credential $credential -Repository $source_name -NuGetApiKey 'n/a'
     }
 
 }
