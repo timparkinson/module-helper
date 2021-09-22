@@ -1,12 +1,13 @@
 [CmdletBinding()]
 param(
-    [Parameter()]
+    [Parameter(Mandatory=$true)]
     [ValidateSet(
         'Build',
-        'Clean'
+        'Clean', 
+        'Publish'
+        
     )]
     [string]$Task
-
 )
 
 $build_path = Join-Path $PSScriptRoot -ChildPath 'build'
@@ -41,6 +42,21 @@ switch ($Task) {
     'Clean' {
         Write-Verbose "removing $build_path"
         Remove-Item -Path $build_path -Recurse -Force -ErrorAction SilentlyContinue
+    }
+
+    'Publish' {
+        if (-not $env:GITHUB_TOKEN) {
+            Write-Error -ErrorAction Stop -Message "No GITHUB_TOKEN set"
+        }
+
+        $owner, $repository = $env:GITHUB_REPOSITORY -split '/'
+
+        $credential = New-Object -TypeName pscredential -ArgumentList $owner, ($env:GITHUB_TOKEN | ConvertTo-SecureString -AsPlainText -Force)
+
+        $source = "https://nuget.pkg.github.com/$owner/index.json"
+        $source_name = 'GitHub'
+        Write-Verbose "Registering repository $source_name at $source"
+        Register-PSRepository -Name $source_name -SourceLocation $source -PublishLocation $source -Credential $credential
     }
 
 }
