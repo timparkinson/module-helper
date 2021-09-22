@@ -39,6 +39,7 @@ switch ($Task) {
     }
 
     'Clean' {
+        Write-Verbose "removing $build_path"
         Remove-Item -Path $build_path -Recurse -Force -ErrorAction SilentlyContinue
     }
 
