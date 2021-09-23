@@ -59,7 +59,7 @@ switch ($Task) {
         Register-PSRepository -Name $source_name -SourceLocation $source -PublishLocation $source -Credential $credential
     
         #$manifest_path = Join-Path -Path $build_path -ChildPath "$repository.psd1"
-        Rename-Item -Path $build_path -ChildPath $repository
+        Rename-Item -Path $build_path -NewName $repository
         $manifest_path = Join-Path -Path (Split-Path -Path $build_path -Parent) -ChildPath $repository
         Write-Verbose "Publishing $manifest_path to $source_name"
 
