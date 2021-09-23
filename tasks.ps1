@@ -58,9 +58,11 @@ switch ($Task) {
         Write-Verbose "Registering repository $source_name at $source"
         Register-PSRepository -Name $source_name -SourceLocation $source -PublishLocation $source -Credential $credential
     
-        $manifest_path = Join-Path -Path $build_path -ChildPath "$repository.psd1"
+        #$manifest_path = Join-Path -Path $build_path -ChildPath "$repository.psd1"
+        Rename-Item -Path $build_path -ChildPath $repository
+        $manifest_path = Join-Path -Path (Split-Path -Path $build_path -Parent) -ChildPath $repository
         Write-Verbose "Publishing $manifest_path to $source_name"
-        ls $build_path
+
         Publish-Module -Path $manifest_path -Credential $credential -Repository $source_name -NuGetApiKey 'n/a' -ErrorAction Stop
     }
 
