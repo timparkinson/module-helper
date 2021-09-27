@@ -94,19 +94,28 @@ switch ($Task) {
             Write-Error -ErrorAction Stop -Message "No GITHUB_TOKEN set"
         }
 
-        $credential = New-Object -TypeName pscredential -ArgumentList $owner, ($env:GITHUB_TOKEN | ConvertTo-SecureString -AsPlainText -Force)
+        #$credential = New-Object -TypeName pscredential -ArgumentList $owner, ($env:GITHUB_TOKEN | ConvertTo-SecureString -AsPlainText -Force)
 
-        $source = "https://nuget.pkg.github.com/$owner/index.json"
-        $source_name = 'GitHub'
-        Write-Verbose "Registering repository $source_name at $source"
-        Register-PSRepository -Name $source_name -SourceLocation $source -PublishLocation $source -Credential $credential
+        $nuget_repository = "https://nuget.pkg.github.com/$owner/index.json"
+        $nupkg = Get-Item -Path (Join-Path -Path $package_path -ChildPath "$repository*.nupkg")
+
+        Write-Verbose "Registering repository $nuget_repository"
+        dotnet nuget add source --username $owner --password $env:GITHUB_TOKEN --store-password-in-clear-text --name github $nuget_repository
+
+        Write-Verbose "Pushing package"
+        dotnet nuget push $nupkg --api-key 'n/a' --source github
+
+        #$source_name = 'GitHub'
+        #Write-Verbose "Registering repository $source_name at $source"
+        #Register-PSRepository -Name $source_name -SourceLocation $source -PublishLocation $source -Credential $credential
     
         #$manifest_path = Join-Path -Path $build_path -ChildPath "$repository.psd1"
-        Rename-Item -Path $build_path -NewName $repository
-        $manifest_path = Join-Path -Path (Split-Path -Path $build_path -Parent) -ChildPath $repository
-        Write-Verbose "Publishing $manifest_path to $source_name"
+        #Rename-Item -Path $build_path -NewName $repository
+        #$manifest_path = Join-Path -Path (Split-Path -Path $build_path -Parent) -ChildPath $repository
+        #Write-Verbose "Publishing $manifest_path to $source_name"
 
-        Publish-Module -Path $manifest_path -Credential $credential -Repository $source_name -NuGetApiKey 'n/a' -ErrorAction Stop
+        #Publish-Module -Path $manifest_path -Credential $credential -Repository $source_name -NuGetApiKey 'n/a' -ErrorAction Stop
+
     }
 
 }
