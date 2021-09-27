@@ -108,7 +108,9 @@ switch ($Task) {
         #dotnet nuget add source --username $owner --password $env:GITHUB_TOKEN --store-password-in-clear-text --name github $nuget_repository
 
         Write-Verbose "Pushing package"
-        nuget push $nupkg -Source $nuget_repository -ApiKey $env:GITHUB_TOKEN -NoServiceEndpoint 
+        dotnet tool install -g gpr --no-cache -v q
+        gpr push --api-key $env:GITHUB_TOKEN $nuget_repository
+        #nuget push $nupkg -Source $nuget_repository -ApiKey $env:GITHUB_TOKEN -NoServiceEndpoint 
 
         #$source_name = 'GitHub'
         #Write-Verbose "Registering repository $source_name at $source"
