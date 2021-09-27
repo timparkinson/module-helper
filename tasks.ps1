@@ -106,6 +106,7 @@ switch ($Task) {
 
         Write-Verbose "Registering repository $nuget_repository"
         nuget sources Add -Name 'github' -Source $nuget_repository -UserName $owner -Password $env:GITHUB_TOKEN
+        nuget setApiKey $env:GITHUB_TOKEN-Source $nuget_repository
         #dotnet nuget add source --username $owner --password $env:GITHUB_TOKEN --store-password-in-clear-text --name github $nuget_repository
 
         Write-Verbose "Pushing package"
