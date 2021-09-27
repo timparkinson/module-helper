@@ -27,19 +27,41 @@ jobs:
           name: module-artifact
           path: ./build/  
 
-  release:
+  package:
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
-      - name: 
+      - name: Download build artifact
         uses: actions/download-artifact@v2
         with: 
           name: module-artifact  
           path: build  
+
+      - name: Create package file and hack around github requirement
+        shell: pwsh
+        run: pwsh -command './tasks.ps1 Package -Verbose'
       
-      - name: publish
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v2.2.3
+        with:
+          name: package-artifact
+          path: ./package/
+
+  publish:
+    needs: package
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v2
+
+      - name: Download package artifact
+        uses: actions/download-artifact@v2
+        with: 
+          name: package-artifact  
+          path: package  
+
+      - name: Publish package to nuget repository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh
