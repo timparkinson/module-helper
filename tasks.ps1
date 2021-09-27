@@ -81,7 +81,7 @@ switch ($Task) {
         $nuspec = Get-ChildItem -Path (Join-Path -Path $package_path -ChildPath "unpacked/*.nuspec")
         $xml = [xml](Get-Content -Path $nuspec.FullName)
         $element = $xml.CreateElement('repository')
-        $element.SetAttribute('url', 'https://github.com/$owner/$repository')
+        $element.SetAttribute('url', "https://github.com/$owner/$repository")
         $element.SetAttribute('type', 'git')
         $xml.package.metadata.AppendChild($element) |
             Out-Null
