@@ -98,34 +98,14 @@ switch ($Task) {
         if (-not $env:GITHUB_TOKEN) {
             Write-Error -ErrorAction Stop -Message "No GITHUB_TOKEN set"
         }
-
-        #$credential = New-Object -TypeName pscredential -ArgumentList $owner, ($env:GITHUB_TOKEN | ConvertTo-SecureString -AsPlainText -Force)
-
         $nuget_repository = "https://nuget.pkg.github.com/$owner/index.json"
         $nupkg = Get-Item -Path (Join-Path -Path $package_path -ChildPath "$repository*.nupkg")
 
-        #Write-Verbose "Registering repository $nuget_repository"
-        #nuget sources Add -Name 'github' -Source $nuget_repository -UserName $owner -Password $env:GITHUB_TOKEN
-        #nuget setApiKey $env:GITHUB_TOKEN -Source $nuget_repository
-        #dotnet nuget add source --username $owner --password $env:GITHUB_TOKEN --store-password-in-clear-text --name github $nuget_repository
+        $result = dotnet nuget push $nupkg --source $nuget_repository --api-key $env:GITHUB_TOKEN 
 
-        #Write-Verbose "Pushing package"
-        dotnet nuget push $nupkg --source $nuget_repository --api-key $env:GITHUB_TOKEN --skip-duplicate 
-        #nuget push $nupkg -Source 'github'
-        #dotnet tool install -g gpr --no-cache -v q
-        #gpr push --api-key $env:GITHUB_TOKEN --repository $nuget_repository $nupkg
-        #nuget push $nupkg -Source $nuget_repository -ApiKey $env:GITHUB_TOKEN -NoServiceEndpoint 
-
-        #$source_name = 'GitHub'
-        #Write-Verbose "Registering repository $source_name at $source"
-        #Register-PSRepository -Name $source_name -SourceLocation $source -PublishLocation $source -Credential $credential
-    
-        #$manifest_path = Join-Path -Path $build_path -ChildPath "$repository.psd1"
-        #Rename-Item -Path $build_path -NewName $repository
-        #$manifest_path = Join-Path -Path (Split-Path -Path $build_path -Parent) -ChildPath $repository
-        #Write-Verbose "Publishing $manifest_path to $source_name"
-
-        #Publish-Module -Path $manifest_path -Credential $credential -Repository $source_name -NuGetApiKey 'n/a' -ErrorAction Stop
+        if ($result -notmatch 'Your package was pushed\.') {
+            Write-Error -ErrorAction Stop -Message "Pushing failed"
+        }
 
     }
 
