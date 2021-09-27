@@ -78,7 +78,7 @@ switch ($Task) {
         $element = $xml.CreateElement('repository')
         $element.SetAttribute('url', 'https://github.com/$owner/$repository')
         $element.SetAttribute('type', 'git')
-        $xml.package.metadata.AddElement($element) |
+        $xml.package.metadata.AppendChild($element) |
             Out-Null
         $xml.Save($nuspec.FullName)
 
