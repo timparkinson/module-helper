@@ -104,11 +104,11 @@ switch ($Task) {
         $nuget_repository = "https://nuget.pkg.github.com/$owner/index.json"
         $nupkg = Get-Item -Path (Join-Path -Path $package_path -ChildPath "$repository*.nupkg")
 
-        Write-Verbose "Registering repository $nuget_repository"
-        dotnet nuget add source --username $owner --password $env:GITHUB_TOKEN --store-password-in-clear-text --name github $nuget_repository
+        #Write-Verbose "Registering repository $nuget_repository"
+        #dotnet nuget add source --username $owner --password $env:GITHUB_TOKEN --store-password-in-clear-text --name github $nuget_repository
 
         Write-Verbose "Pushing package"
-        nuget push $nupkg -Source github
+        nuget push $nupkg -Source $nuget_repository -ApiKey $env:GITHUB_TOKEN -NoServiceEndpoint 
 
         #$source_name = 'GitHub'
         #Write-Verbose "Registering repository $source_name at $source"
