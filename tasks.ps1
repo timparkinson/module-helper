@@ -49,6 +49,11 @@ switch ($Task) {
 
         Write-Verbose "removing $package_path"
         Remove-Item -Path $package_path -Recurse -Force -ErrorAction SilentlyContinue
+
+        $repository_path = Join-Path -Path $PSScriptRoot -ChildPath $repository
+        Write-Verbose "removing $repository_path"
+        Remove-Item -Path $repository_path -Recurse -Force -ErrorAction SilentlyContinue
+
     }
 
     'Package' {
@@ -83,7 +88,7 @@ switch ($Task) {
         $xml.Save($nuspec.FullName)
 
         Write-Verbose "Re-compressing nupkg"
-        Compress-Archive -Path (Join-Path -Path $package_path -ChildPath 'unpacked') -DestinationPath $nupkg.FullName -Update
+        Compress-Archive -Path (Join-Path -Path $package_path -ChildPath 'unpacked/*') -DestinationPath $nupkg.FullName -Update
 
         Write-Verbose "removing expanded files"
         Remove-Item -Path (Join-Path -Path $package_path -ChildPath 'unpacked') -Recurse -ErrorAction SilentlyContinue
