@@ -105,10 +105,10 @@ switch ($Task) {
         $nupkg = Get-Item -Path (Join-Path -Path $package_path -ChildPath "$repository*.nupkg")
 
         Write-Verbose "Registering repository $nuget_repository"
-        dotnet nuget add source --username $owner --password $env:GITHUB_TOKEN --store-password-in-clear-text --name github $nuget_repository
+        #dotnet nuget add source --username $owner --password $env:GITHUB_TOKEN --store-password-in-clear-text --name github $nuget_repository
 
         Write-Verbose "Pushing package"
-        dotnet nuget push $nupkg --api-key 'n/a' --source github
+        dotnet nuget push $nupkg --api-key $env:GITHUB_TOKEN --source $nuget_repository
 
         #$source_name = 'GitHub'
         #Write-Verbose "Registering repository $source_name at $source"
