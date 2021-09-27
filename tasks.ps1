@@ -109,7 +109,7 @@ switch ($Task) {
 
         Write-Verbose "Pushing package"
         dotnet tool install -g gpr --no-cache -v q
-        gpr push --api-key $env:GITHUB_TOKEN $nuget_repository
+        gpr push --api-key $env:GITHUB_TOKEN --repository $nuget_repository $nupkg
         #nuget push $nupkg -Source $nuget_repository -ApiKey $env:GITHUB_TOKEN -NoServiceEndpoint 
 
         #$source_name = 'GitHub'
