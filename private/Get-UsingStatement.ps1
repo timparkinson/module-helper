@@ -63,7 +63,7 @@ function Get-UsingStatement {
                                 Get-Content -Path $_.FullName |
                                     ForEach-Object {
                                         if ($_ -match '^using ') {
-                                            if (-not $using_list.NotContains($_)) {
+                                            if (-not $using_list.Contains($_)) {
                                                 $using_list.Add($_)
                                             }
                                         }
