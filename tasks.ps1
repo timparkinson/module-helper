@@ -103,7 +103,7 @@ switch ($Task) {
 
         $result = dotnet nuget push $nupkg --source $nuget_repository --api-key $env:GITHUB_TOKEN 
 
-        if ($result -notmatch 'Your package was pushed\.') {
+        if ($result[-1] -notmatch 'Your package was pushed\.') {
             Write-Error -ErrorAction Stop -Message "Pushing failed"
         }
 
